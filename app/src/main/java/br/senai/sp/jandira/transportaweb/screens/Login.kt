@@ -81,8 +81,9 @@ fun Login() {
                     )
                 Text(
                     text = "Digite seu e-mail aqui:",
+                    fontWeight = FontWeight.Medium,
                     modifier = Modifier
-                        .padding(top = 64.dp)
+                        .padding(top = 64.dp, end = 148.dp, bottom = 4.dp)
                 )
                 OutlinedTextField(
                     modifier = Modifier
@@ -106,9 +107,9 @@ fun Login() {
                     }
                 )
                 Text(
-                    text = "Digite seu e-mail aqui:",
+                    text = "Digite sua senha aqui:",
                     modifier = Modifier
-                        .padding(top = 64.dp)
+                        .padding(top = 64.dp, end = 148.dp, bottom = 4.dp)
                 )
                 OutlinedTextField(
                     modifier = Modifier
