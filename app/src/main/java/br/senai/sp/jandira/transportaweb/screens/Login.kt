@@ -26,12 +26,15 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -39,9 +42,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.transportaweb.R
+import br.senai.sp.jandira.transportaweb.utilities.MotoristaRepository
 
 @Composable
 fun Login() {
+
+    val cr =  MotoristaRepository(LocalContext.current)
+
+    var emailState = remember{
+        mutableStateOf("")
+    }
+
+    var passwordState = remember{
+        mutableStateOf("")
+    }
+
+    var mensagemErroState = remember {
+        mutableStateOf("")
+    }
 
     Surface(
         modifier = Modifier
@@ -137,7 +155,6 @@ fun Login() {
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .fillMaxWidth()
-                        //.offset(x = -10.dp, y = 10.dp)
                         .padding(start = 44.dp, top = 5.dp, end = 44.dp)
                 ) {
                     Checkbox(
@@ -167,7 +184,17 @@ fun Login() {
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults
                         .buttonColors(containerColor = Color(0xFFF61221)),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        if (emailState.value == "" || passwordState.value == ""){
+                            mensagemErroState.value = "Email ou senhas incorretos"
+                        } else {
+                            val motorista = cr.validarLogin(emailState.value, passwordState.value)
+
+                            if(motorista){
+                                controleDeNavegacao.navigate("home")
+                            }
+                        }
+                    }
                 ){
                     Text(
                         text = "LOGIN",
