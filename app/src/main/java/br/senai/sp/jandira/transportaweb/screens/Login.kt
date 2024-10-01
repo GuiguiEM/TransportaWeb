@@ -41,11 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import br.senai.sp.jandira.transportaweb.R
 import br.senai.sp.jandira.transportaweb.utilities.MotoristaRepository
 
 @Composable
-fun Login() {
+fun Login(controleDeNavegacao: NavHostController) {
 
     val cr =  MotoristaRepository(LocalContext.current)
 
@@ -185,15 +186,15 @@ fun Login() {
                     colors = ButtonDefaults
                         .buttonColors(containerColor = Color(0xFFF61221)),
                     onClick = {
-                        if (emailState.value == "" || passwordState.value == ""){
-                            mensagemErroState.value = "Email ou senhas incorretos"
-                        } else {
-                            val motorista = cr.validarLogin(emailState.value, passwordState.value)
+                        //if (emailState.value == "" || passwordState.value == ""){
+                            //mensagemErroState.value = "Email ou senhas incorretos"
+                        //} else {
+                            //val motorista = cr.validarLogin(emailState.value, passwordState.value)
 
-                            if(motorista){
-                                controleDeNavegacao.navigate("home")
-                            }
-                        }
+                            //if(motorista){
+                                //controleDeNavegacao.navigate("historico")
+                            //}
+                        //}
                     }
                 ){
                     Text(
@@ -210,5 +211,5 @@ fun Login() {
 @Preview
 @Composable
 private fun LoginPreview() {
-    Login()
+    //Login()
 }

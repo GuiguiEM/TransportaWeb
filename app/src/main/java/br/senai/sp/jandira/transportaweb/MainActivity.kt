@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import br.senai.sp.jandira.transportaweb.screens.HistoricoViagens
+import br.senai.sp.jandira.transportaweb.screens.Login
 import br.senai.sp.jandira.transportaweb.ui.theme.TransportaWebTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +24,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TransportaWebTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val ControleDeNavegacao = rememberNavController()
+                NavHost(
+                    navController = ControleDeNavegacao,
+                    startDestination = "login"
+                ){
+                    composable(route = "login"){ Login(ControleDeNavegacao) }
+                    composable(route = "historicoViagens"){ HistoricoViagens(ControleDeNavegacao) }
                 }
             }
         }
