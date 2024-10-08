@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitFactory {
 
-    private val BASE_URL = "mysql://web:transporta123!@transporta.mysql.database.azure.com:3306/db_transporta_web"
+    private val BASE_URL = "https://crud-03-09.onrender.com/"
 
     private val retrofitFactory = Retrofit
         .Builder()

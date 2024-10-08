@@ -20,6 +20,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -43,12 +44,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.senai.sp.jandira.transportaweb.R
-import br.senai.sp.jandira.transportaweb.utilities.MotoristaRepository
+import br.senai.sp.jandira.transportaweb.model.LoginMotorista
+import br.senai.sp.jandira.transportaweb.model.RespostaLogin
+import br.senai.sp.jandira.transportaweb.service.RetrofitFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun Login(controleDeNavegacao: NavHostController) {
 
-    val cr =  MotoristaRepository(LocalContext.current)
+    val retrofitFactory = RetrofitFactory()
 
     var emailState = remember{
         mutableStateOf("")
@@ -108,8 +114,8 @@ fun Login(controleDeNavegacao: NavHostController) {
                     modifier = Modifier
                         .height(50.dp),
                     shape = RoundedCornerShape(10.dp),
-                    value = "",
-                    onValueChange = {},
+                    value = emailState.value,
+                    onValueChange = { emailState.value = it},
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFFF61221),
                         unfocusedBorderColor = Color(0xFF131313),
@@ -140,8 +146,8 @@ fun Login(controleDeNavegacao: NavHostController) {
                         focusedContainerColor = Color(0xFFF4F4F4),
                         unfocusedContainerColor = Color(0xFFF4F4F4)
                     ),
-                    value = "",
-                    onValueChange = {},
+                    value = passwordState.value,
+                    onValueChange = {passwordState.value = it},
                     label = {
 
                         Text(
@@ -186,15 +192,34 @@ fun Login(controleDeNavegacao: NavHostController) {
                     colors = ButtonDefaults
                         .buttonColors(containerColor = Color(0xFFF61221)),
                     onClick = {
-                        //if (emailState.value == "" || passwordState.value == ""){
-                            //mensagemErroState.value = "Email ou senhas incorretos"
-                        //} else {
-                            //val motorista = cr.validarLogin(emailState.value, passwordState.value)
 
-                            //if(motorista){
-                                //controleDeNavegacao.navigate("historico")
-                            //}
-                        //}
+                        val motoristaLogin = LoginMotorista(
+                            email = emailState.value,
+                            senha = passwordState.value
+                        )
+
+                        val call = retrofitFactory.getMotoristaService().getMotoristaByEmailSenha(motoristaLogin)
+
+                        call.enqueue(object : Callback<RespostaLogin> {
+                            override fun onResponse(call: Call<RespostaLogin>, response: Response<RespostaLogin>) {
+                                if (response.isSuccessful) {
+                                    val motoristaLogado = response.body()
+                                    motoristaLogado?.let {
+                                        if (it.status_code == 200) {
+                                            controleDeNavegacao.navigate("historicoViagens")
+                                        } else {
+                                            mensagemErroState.value = "Erro: ${it.message}"
+                                        }
+                                    }
+                                } else {
+                                    mensagemErroState.value = "Falha ao realizar login. Tente novamente."
+                                }
+                            }
+
+                            override fun onFailure(call: Call<RespostaLogin>, t: Throwable) {
+                                mensagemErroState.value = "Erro de rede: ${t.message}"
+                            }
+                        })
                     }
                 ){
                     Text(
@@ -213,3 +238,6 @@ fun Login(controleDeNavegacao: NavHostController) {
 private fun LoginPreview() {
     //Login()
 }
+
+// tesstando@gmail.com
+// PedrinhoJUAN

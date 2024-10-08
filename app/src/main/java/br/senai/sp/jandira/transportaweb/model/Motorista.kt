@@ -11,3 +11,15 @@ data class Motorista(
     val email: String = "",
     val senha: String = ""
 )
+
+data class LoginMotorista(
+    val email: String = "",
+    val senha: String = ""
+)
+
+data class RespostaLogin(
+    val status_code: Int?,
+    val message: String?
+)
+
+
